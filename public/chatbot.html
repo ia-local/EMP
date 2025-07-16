@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Enquête</title>
+    <link rel="stylesheet" href="style.css"> </head>
+<body>
+    <div id="chat-main-layout">
+        <aside>
+            <h4>Sélectionnez un rôle</h4>
+            <button class="role-button" data-role="investigator">Enquêteur</button>
+            <button class="role-button" data-role="journalist">Journaliste</button>
+            <button class="role-button" data-role="lawyer">Avocat</button>
+            <button class="role-button" data-role="judge">Juge</button>
+            <button class="role-button" data-role="system-role">Système (Art. 41 CPP)</button>
+            <button id="new-conversation-button">Nouvelle Conversation</button>
+        </aside>
+
+        <div id="chat-container">
+            <div id="messages-display">
+                </div>
+            <div id="input-area">
+                <input type="text" id="user-input" placeholder="Tapez votre message...">
+                <button id="send-button">Envoyer</button>
+            </div>
+        </div>
+    </div>
+    <script src="chat.js"></script>
+</body>
+</html>

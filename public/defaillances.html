@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Défaillances de la Ve République et de la Fonction Publique</title>
+    <meta name="description" content="Analyse détaillée des défaillances par secteur de la Ve République et de la fonction publique française.">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap; /* Permet aux onglets de passer à la ligne */
+            justify-content: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .nav-tabs button {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 0 5px 5px 0; /* Espacement entre les boutons */
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            white-space: nowrap; /* Empêche le texte de se couper */
+        }
+        .nav-tabs button:hover {
+            background-color: #e2e2e2;
+        }
+        .nav-tabs button.active {
+            background-color: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .content-section {
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        .content-section h2 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        .content-section ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+        .content-section li {
+            margin-bottom: 10px;
+        }
+        .loading, .error {
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2em;
+            color: #555;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .analyze-button-container {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .analyze-button-container button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .analyze-button-container button:hover {
+            background-color: #0056b3;
+        }
+        .analyze-button-container button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .ai-analysis-section {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+            box-shadow: inset 0 1px 5px rgba(0,0,0,0.05);
+        }
+        .ai-analysis-section h3 {
+            color: #343a40;
+            border-bottom: 1px solid #adb5bd;
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+        .ai-analysis-section p {
+            margin-bottom: 10px;
+        }
+        .ai-analysis-section .loading, .ai-analysis-section .error {
+            text-align: left;
+            padding: 0;
+            font-size: 1em;
+            color: #555;
+        }
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .nav-tabs button {
+                margin: 5px 0;
+            }
+            .container {
+                padding: 15px;
+                margin: 10px auto;
+            }
+            .analyze-button-container button {
+                padding: 10px 15px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Défaillances de la Ve République et de la Fonction Publique</h1>
+
+        <div class="nav-tabs" id="sector-tabs">
+            <div class="loading">Chargement des secteurs...</div>
+        </div>
+
+        <div class="content-section" id="sector-content">
+            <p class="loading">Sélectionnez un secteur pour afficher les détails.</p>
+        </div>
+
+    </div>
+
+    <script>
+        const sectorTabsContainer = document.getElementById('sector-tabs');
+        const sectorContentDiv = document.getElementById('sector-content');
+
+        let allSectorsData = {}; // Pour stocker toutes les données des secteurs
+
+        // Mappe les clés aux noms affichables
+        const sectorNames = {
+            justice: "Justice",
+            education: "Éducation Nationale",
+            sante: "Santé Publique",
+            agriculture: "Agriculture",
+            transports: "Transports",
+            energie: "Énergie",
+            environnement: "Environnement",
+            defense: "Défense et Sécurité Nationale"
+        };
+
+        /**
+         * Charge et affiche les détails d'un secteur spécifique.
+         * @param {string} sectorKey La clé du secteur (e.g., 'justice', 'education').
+         */
+        async function loadSectorDetails(sectorKey) {
+            sectorContentDiv.innerHTML = '<p class="loading">Chargement des détails...</p>';
+            try {
+                const response = await fetch(`/api/defaillances/${sectorKey}`);
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+                const data = await response.json();
+                renderSectorContent(data, sectorKey); // Passer la clé du secteur
+                // Mettre à jour la classe active pour les boutons
+                document.querySelectorAll('.nav-tabs button').forEach(button => {
+                    if (button.dataset.sector === sectorKey) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active');
+                    }
+                });
+            } catch (error) {
+                console.error(`Erreur lors du chargement des détails du secteur ${sectorKey}:`, error);
+                sectorContentDiv.innerHTML = `<p class="error">Erreur lors du chargement des détails pour "${sectorKey}". Veuillez réessayer. Détails: ${error.message}</p>`;
+            }
+        }
+
+        /**
+         * Affiche le contenu d'un secteur dans le DOM et ajoute le bouton d'analyse.
+         * @param {object} sectorData Les données du secteur (titre, details).
+         * @param {string} sectorKey La clé du secteur pour l'analyse IA.
+         */
+        function renderSectorContent(sectorData, sectorKey) {
+            let htmlContent = `<h2>${sectorData.titre}</h2>`;
+            if (sectorData.details && Array.isArray(sectorData.details)) {
+                htmlContent += '<ul>';
+                sectorData.details.forEach(detail => {
+                    htmlContent += `<li>${detail}</li>`;
+                });
+                htmlContent += '</ul>';
+            } else {
+                htmlContent += '<p>Aucun détail disponible pour ce secteur.</p>';
+            }
+
+            // Ajouter le bouton d'analyse IA et la section d'analyse
+            htmlContent += `
+                <div class="analyze-button-container">
+                    <button class="analyze-ia-button" data-sector-key="${sectorKey}">
+                        Générer/Régénérer l'Analyse IA
+                    </button>
+                </div>
+                <div class="ai-analysis-section" id="ai-analysis-${sectorKey}">
+                    <h3>Analyse IA du Secteur ${sectorNames[sectorKey] || sectorKey.charAt(0).toUpperCase() + sectorKey.slice(1)}</h3>
+                    <div class="analysis-content">
+                        <p class="initial-message">Cliquez sur le bouton ci-dessus pour générer l'analyse IA.</p>
+                    </div>
+                </div>
+            `;
+            sectorContentDiv.innerHTML = htmlContent;
+
+            // Ajouter l'écouteur d'événement au nouveau bouton
+            const analyzeButton = sectorContentDiv.querySelector(`.analyze-ia-button[data-sector-key="${sectorKey}"]`);
+            if (analyzeButton) {
+                analyzeButton.addEventListener('click', () => generateSectorAnalysis(sectorKey, sectorData, analyzeButton));
+            }
+        }
+
+        /**
+         * Génère l'analyse détaillée pour un secteur spécifique via le chatbot.
+         * Permet la régénération du contenu.
+         * @param {string} sectorKey La clé du secteur à analyser.
+         * @param {object} sectorData Les données complètes du secteur.
+         * @param {HTMLButtonElement} buttonElement Le bouton qui a déclenché l'action.
+         */
+        async function generateSectorAnalysis(sectorKey, sectorData, buttonElement) {
+            const aiAnalysisSection = document.getElementById(`ai-analysis-${sectorKey}`);
+            const analysisContentDiv = aiAnalysisSection.querySelector('.analysis-content');
+            
+            // Désactiver le bouton pendant la génération
+            buttonElement.disabled = true;
+            buttonElement.textContent = 'Génération en cours...';
+
+            analysisContentDiv.innerHTML = '<p class="loading">Génération de l\'analyse par l\'IA en cours... Cela peut prendre un moment.</p>';
+            analysisContentDiv.classList.add('loading');
+            analysisContentDiv.classList.remove('error');
+
+            // Construire le message à envoyer au LLM pour ce secteur spécifique
+            // On peut ajouter une variable de temps pour encourager la variation si le modèle le supporte bien
+            const timestamp = new Date().toISOString();
+            let promptMessage = `En tant qu'Analyste des Défaillances, fournissez une analyse approfondie du secteur "${sectorData.titre}".
+            Basez-vous sur les points critiques suivants que nous avons identifiés : \n- ${sectorData.details.join('\n- ')}\n
+            Développez les enjeux, les causes possibles de ces défaillances et leurs impacts sur la société civile et la Ve République. Votre réponse doit être concise mais informative, sans introduction générale ni conclusion, et directement centrée sur l'analyse de ce secteur spécifique. Utilisez un langage clair et factuel.
+            Pour encourager la variation dans la réponse (si le modèle le permet) : Générez une version fraîche et unique de cette analyse. (Horodatage de la requête: ${timestamp})`;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: promptMessage,
+                        role: 'analyste_defaillances', // Rôle configuré pour gemma2-9b-it
+                        history: [], // Nouvelle conversation pour une analyse fraîche
+                        sectorKey: sectorKey // <--- C'est l'ajout essentiel pour envoyer la clé du secteur
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+
+                const data = await response.json();
+                analysisContentDiv.innerHTML = data.response.replace(/\n/g, '<br>'); // Afficher la réponse de l'IA
+                analysisContentDiv.classList.remove('loading');
+
+            } catch (error) {
+                console.error(`Erreur lors de la génération de l'analyse pour le secteur ${sectorKey}:`, error);
+                analysisContentDiv.innerHTML = `<p class="error">Erreur lors de la génération de l'analyse : ${error.message}. Veuillez réessayer.</p>`;
+                analysisContentDiv.classList.remove('loading');
+                analysisContentDiv.classList.add('error');
+            } finally {
+                // Réactiver le bouton après la génération (succès ou échec)
+                buttonElement.disabled = false;
+                buttonElement.textContent = 'Générer/Régénérer l\'Analyse IA';
+            }
+        }
+
+        /**
+         * Charge tous les secteurs disponibles et crée les boutons de navigation.
+         */
+        async function loadAllSectors() {
+            try {
+                const response = await fetch('/api/defaillances');
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP: ${response.status}`);
+                }
+                const sectors = await response.json();
+                allSectorsData = sectors; // Stocke toutes les données des secteurs
+                
+                sectorTabsContainer.innerHTML = ''; // Nettoyer le message de chargement
+
+                let firstSectorKey = null;
+
+                for (const key in sectors) {
+                    if (sectors.hasOwnProperty(key)) {
+                        if (!firstSectorKey) {
+                            firstSectorKey = key; // Garde la première clé pour le chargement initial
+                        }
+                        const button = document.createElement('button');
+                        button.dataset.sector = key;
+                        button.textContent = sectorNames[key] || key.charAt(0).toUpperCase() + key.slice(1);
+                        button.addEventListener('click', () => loadSectorDetails(key));
+                        sectorTabsContainer.appendChild(button);
+                    }
+                }
+
+                // Charge les détails du premier secteur par default
+                if (firstSectorKey) {
+                    loadSectorDetails(firstSectorKey);
+                } else {
+                    sectorContentDiv.innerHTML = '<p>Aucune donnée de défaillance trouvée.</p>';
+                }
+
+            } catch (error) {
+                console.error('Erreur lors du chargement des secteurs:', error);
+                sectorTabsContainer.innerHTML = '<p class="error">Impossible de charger les secteurs. Veuillez vérifier la connexion au serveur.</p>';
+                sectorContentDiv.innerHTML = ''; // Vide le contenu si les secteurs ne chargent pas
+            }
+        }
+
+        // Lance le chargement initial des secteurs lorsque la page est prête
+        document.addEventListener('DOMContentLoaded', loadAllSectors);
+    </script>
+</body>
+</html>

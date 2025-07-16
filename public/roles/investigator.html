@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rôle : Enquêteur - Gestion du Dossier</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        /* Styles spécifiques à l'enquêteur (peut être intégré dans style.css si préféré) */
+        body {
+            display: flex;
+            flex-direction: column; /* Garde le header en haut */
+            height: 100vh;
+            overflow: hidden; /* Empêche le scroll sur le body principal */
+        }
+        #investigator-layout {
+            display: flex;
+            flex-grow: 1; /* Permet au layout de prendre l'espace restant */
+            margin: 10px; /* Marge générale autour du container */
+            background-color: var(--color-white);
+            border-radius: 8px;
+            box-shadow: var(--shadow-medium);
+            overflow: hidden; /* Pour gérer le scroll des sub-sections */
+        }
+        #investigator-aside {
+            width: 250px; /* Largeur pour l'aside enquêteur */
+            background-color: var(--color-light-grey);
+            padding: 20px;
+            border-right: 1px solid var(--color-medium-grey);
+            display: flex;
+            flex-direction: column;
+        }
+        #investigator-aside h3 {
+            color: var(--color-dark-navy);
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--color-medium-grey);
+            padding-bottom: 10px;
+        }
+        .aside-section {
+            margin-bottom: 25px;
+        }
+        .aside-section h4 {
+            color: #555;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .aside-button {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 8px;
+            background-color: var(--color-bright-blue);
+            color: var(--color-white);
+            text-align: left;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .aside-button:hover {
+            background-color: #3a7bd2;
+        }
+        .aside-button.active {
+            background-color: var(--color-dark-navy);
+            font-weight: bold;
+        }
+
+        #main-content {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto; /* Permet le scroll si le contenu dépasse */
+        }
+        #main-content h1 {
+            color: var(--color-dark-navy);
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--color-medium-grey);
+        }
+
+        /* Styles du gestionnaire de fichiers */
+        .file-manager {
+            flex-grow: 1;
+            background-color: var(--color-white);
+            border: 1px solid var(--color-medium-grey);
+            border-radius: 5px;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        .file-manager ul {
+            list-style: none;
+            padding-left: 20px;
+            margin: 0;
+        }
+        .file-manager ul.root {
+            padding-left: 0;
+        }
+        .file-manager li {
+            padding: 5px 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+        }
+        .file-manager li:hover {
+            background-color: #eef;
+            border-radius: 3px;
+        }
+        .file-manager li.folder > span {
+            font-weight: bold;
+            color: var(--color-dark-navy);
+        }
+        .file-manager li.active-file {
+            background-color: #e0f0ff;
+            font-weight: bold;
+            border-radius: 3px;
+        }
+        .file-icon::before {
+            content: '📄'; /* Icône de fichier par défaut */
+            margin-right: 5px;
+        }
+        .folder-icon::before {
+            content: '📂'; /* Icône de dossier */
+            margin-right: 5px;
+        }
+        .file-manager li.folder.open > .folder-icon::before {
+            content: '📁'; /* Icône de dossier ouvert */
+        }
+
+        .file-actions {
+            margin-left: auto; /* Pousse les boutons à droite */
+            display: none; /* Caché par défaut */
+            gap: 5px;
+        }
+        .file-manager li:hover .file-actions {
+            display: flex; /* Apparaît au survol */
+        }
+        .file-actions button {
+            background-color: transparent;
+            border: 1px solid var(--color-medium-grey);
+            color: #555;
+            padding: 3px 8px;
+            font-size: 0.8em;
+            border-radius: 3px;
+        }
+        .file-actions button.edit { background-color: #ffc107; color: var(--color-dark-navy); border-color: #ffc107;}
+        .file-actions button.delete { background-color: var(--color-dark-red); color: var(--color-white); border-color: var(--color-dark-red);}
+        .file-actions button.classify { background-color: var(--color-green-success); color: var(--color-white); border-color: var(--color-green-success);}
+
+        .file-actions button:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+
+        /* Zone de détail/édition du fichier */
+        #file-detail-area {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--color-light-grey);
+            border: 1px solid var(--color-medium-grey);
+            border-radius: 5px;
+            min-height: 150px;
+            display: none; /* Caché par défaut */
+        }
+        #file-detail-area h3 {
+            margin-top: 0;
+            color: var(--color-dark-navy);
+        }
+        #file-content {
+            width: 100%;
+            min-height: 100px;
+            padding: 8px;
+            border: 1px solid var(--color-medium-grey);
+            border-radius: 3px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+        #file-classification {
+            width: 100%;
+            padding: 8px;
+            margin-top: 10px;
+            border: 1px solid var(--color-medium-grey);
+            border-radius: 3px;
+            box-sizing: border-box;
+        }
+        #save-file-button {
+            background-color: var(--color-bright-blue);
+            color: var(--color-white);
+            margin-top: 10px;
+            padding: 8px 15px;
+        }
+        #save-file-button:hover {
+            background-color: #3a7bd2;
+        }
+
+        /* Assistant de l'enquêteur */
+        #assistant-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px dashed var(--color-medium-grey);
+        }
+        #assistant-section h2 {
+            color: var(--color-dark-navy);
+        }
+        #assistant-input-area {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        #assistant-query {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid var(--color-medium-grey);
+            border-radius: 5px;
+        }
+        #ask-assistant-button {
+            background-color: var(--color-green-success);
+            color: var(--color-white);
+            padding: 10px 15px;
+        }
+        #assistant-response-area {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #e0f0ff; /* Fond bleu clair pour les réponses de l'assistant */
+            border: 1px solid var(--color-bright-blue);
+            border-radius: 5px;
+            white-space: pre-wrap; /* Pour conserver les retours à la ligne */
+        }
+        #assistant-response-area p {
+            margin: 0;
+            color: #333;
+        }
+
+        /* Retour à l'accueil */
+        .back-button {
+            margin-top: 20px;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            #investigator-layout {
+                flex-direction: column;
+            }
+            #investigator-aside {
+                width: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--color-medium-grey);
+                padding-bottom: 10px;
+            }
+            .aside-section {
+                margin-bottom: 15px;
+            }
+            .aside-button {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <span class="flag-icon" role="img" aria-label="Drapeau Français">🇫🇷</span>
+        <h1>Espace Enquêteur : Gestion de Dossier</h1>
+    </header>
+
+    <div id="investigator-layout">
+        <aside id="investigator-aside">
+            <h3>Navigation Enquêteur</h3>
+            <div class="aside-section">
+                <h4>Outils du Dossier</h4>
+                <button class="aside-button active" data-view="file-management">Gestion des Éléments</button>
+                </div>
+            <div class="aside-section">
+                <h4>Fonctions Spécialisées</h4>
+                <button class="aside-button" data-view="assistant-tools">Assistant IA</button>
+            </div>
+            <a href="../index.html" class="back-button">Retour à l'Accueil</a>
+        </aside>
+
+        <div id="main-content">
+            <div id="file-management-view">
+                <h1>Dossier d'Enquête : Classification des Éléments</h1>
+                <p>Ceci est votre interface de gestion des éléments de preuve. Classez, ajoutez, modifiez ou supprimez les documents pour structurer votre enquête.</p>
+
+                <div class="file-manager">
+                    <h3>Arborescence du Dossier</h3>
+                    <ul id="file-tree" class="root">
+                        <li class="folder" data-id="root-finances" data-name="Finances Offshore">
+                            <span class="folder-icon"></span><span>Finances Offshore</span>
+                            <ul>
+                                <li class="file" data-id="doc-releve-bancaire" data-name="Relevé Bancaire XYZ.pdf" data-content="Détail des transactions suspectes de la société XYZ.">
+                                    <span class="file-icon"></span><span>Relevé Bancaire XYZ.pdf</span>
+                                    <div class="file-actions">
+                                        <button class="classify">Classifier</button>
+                                        <button class="edit">Éditer</button>
+                                        <button class="delete">Supprimer</button>
+                                    </div>
+                                </li>
+                                <li class="file" data-id="doc-contrat-masque" data-name="Contrat Masqué ABC.docx" data-content="Contrat entre M. X et la société ABC, non divulgué.">
+                                    <span class="file-icon"></span><span>Contrat Masqué ABC.docx</span>
+                                    <div class="file-actions">
+                                        <button class="classify">Classifier</button>
+                                        <button class="edit">Éditer</button>
+                                        <button class="delete">Supprimer</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="folder" data-id="root-temoignages" data-name="Témoignages">
+                            <span class="folder-icon"></span><span>Témoignages</span>
+                            <ul>
+                                <li class="file" data-id="doc-audition-A" data-name="Audition Témoin A.txt" data-content="Déposition du témoin A concernant les campagnes électorales.">
+                                    <span class="file-icon"></span><span>Audition Témoin A.txt</span>
+                                    <div class="file-actions">
+                                        <button class="classify">Classifier</button>
+                                        <button class="edit">Éditer</button>
+                                        <button class="delete">Supprimer</button>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="file" data-id="doc-synthese-initiale" data-name="Synthèse Initiale.md" data-content="Première synthèse des faits dénoncés par l'alerte.">
+                            <span class="file-icon"></span><span>Synthèse Initiale.md</span>
+                            <div class="file-actions">
+                                <button class="classify">Classifier</button>
+                                <button class="edit">Éditer</button>
+                                <button class="delete">Supprimer</button>
+                            </div>
+                        </li>
+                    </ul>
+                    <button id="add-new-file-button" style="margin-top: 15px; background-color: var(--color-bright-blue); color: var(--color-white);">Ajouter un Nouvel Élément</button>
+                </div>
+
+                <div id="file-detail-area">
+                    <h3>Détails de l'Élément : <span id="current-file-name"></span></h3>
+                    <label for="file-content">Contenu :</label>
+                    <textarea id="file-content"></textarea>
+                    <label for="file-classification">Classification :</label>
+                    <select id="file-classification">
+                        <option value="">Sélectionnez une classification</option>
+                        <option value="financier">Financier</option>
+                        <option value="electoral">Électoral</option>
+                        <option value="temoignage">Témoignage</option>
+                        <option value="sante_publique">Santé Publique</option>
+                        <option value="legal">Légal</option>
+                        <option value="autre">Autre</option>
+                    </select>
+                    <button id="save-file-button">Enregistrer les Modifications</button>
+                </div>
+            </div>
+
+            <div id="assistant-tools-view" style="display: none;">
+                <h1>Assistant IA de l'Enquêteur</h1>
+                <p>Cet assistant est là pour vous aider à analyser des concepts techniques ou à générer des idées, mais il ne peut pas exécuter de commandes réelles sur votre système. Il peut par exemple, vous expliquer comment un Makefile fonctionne ou vous suggérer des commandes shell hypothétiques pour l'analyse de données.</p>
+                
+                <div id="assistant-input-area">
+                    <input type="text" id="assistant-query" placeholder="Demandez à l'assistant (ex: 'Comment analyser un Makefile ?', 'Donne-moi des commandes pour chercher des mots clés dans des fichiers')..."/>
+                    <button id="ask-assistant-button">Demander</button>
+                </div>
+                <div id="assistant-response-area">
+                    <p><i>Les réponses de l'assistant apparaîtront ici.</i></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="../investigator.js"></script> </body>
+</html>

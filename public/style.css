@@ -1,0 +1,471 @@
+/* public/style.css */
+
+/* --- Variables de Couleurs (Palette Bleu-Blanc-Rouge moderne) --- */
+:root {
+    --color-dark-navy: #0A1128;   /* Bleu Marine très foncé (entêtes, arrière-plans majeurs) */
+    --color-white: #FFFFFF;       /* Blanc (texte, fonds clairs) */
+    --color-light-grey: #F5F5F5;  /* Gris très clair (fonds de sections) */
+    --color-medium-grey: #CCCCCC; /* Gris moyen (bordures, séparateurs) */
+    --color-bright-blue: #4A90E2; /* Bleu vif (boutons, accents) */
+    --color-dark-red: #D90366;    /* Rouge foncé (accents, boutons d'action spécifiques comme "Nouvelle Conversation") */
+    --color-green-success: #28a745; /* Vert (boutons d'action positifs) */
+    --color-orange-accent: #f39c12; /* Orange (pour le chroniqueur) */
+
+    /* Ombres */
+    --shadow-light: 0 2px 5px rgba(0,0,0,0.05);
+    --shadow-medium: 0 4px 10px rgba(0,0,0,0.1);
+}
+html 
+/* --- Styles Généraux --- */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: var(--color-light-grey); /* Fond léger pour le body */
+    color: #333; /* Couleur de texte par défaut */
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex; /* Utilisé pour le layout principal de chatbox.html */
+    flex-direction: column; /* Assure que le header est en haut */
+
+}
+
+.container {
+    margin: 150px;
+    padding: 20px;
+    background-color: var(--color-white);
+    border-radius: 8px;
+    box-shadow: var(--shadow-medium);
+}
+
+h1, h2, h3, h4 {
+    color: var(--color-dark-navy);
+}
+
+a {
+    color: var(--color-bright-blue);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+/* --- Entête (Header) --- */
+header {
+    background-color: var(--color-dark-navy);
+    color: white;
+    padding: 15px 20px;
+    text-align: center;
+    box-shadow: var(--shadow-medium);
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: fixed; /* Rendre l'entête sticky si nécessaire */
+    top: 0;
+    z-index: 1000;
+}
+.cms {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    height: 33px;
+}
+header h1 {
+    margin: 0;
+    color: white;
+    font-size: 1.8em;
+}
+
+.flag-icon {
+    font-size: 1.5em; /* Ou utilisez une image SVG */
+    /* Pour un drapeau simple en texte: */
+    content: "🇫🇷"; /* Unicode pour le drapeau français */
+}
+
+/* --- Bouton du Chatbot (sur index.html) --- */
+#openChatModalBtn {
+    background-color: var(--color-green-success);
+    color: var(--color-white);
+    font-size: 1.2em;
+    padding: 15px 30px;
+    margin: 50px auto 20px auto;
+    display: block;
+}
+#openChatModalBtn:hover {
+    background-color: darken(var(--color-green-success), 10%); /* Nécessite un préprocesseur CSS ou ajustement manuel */
+    background-color: #218838; /* Valeur manuelle ajustée */
+}
+
+/* --- Navigation par Rôle (sur index.html - agissant comme pagination) --- */
+.role-navigation {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+.role-navigation a {
+    background-color: var(--color-bright-blue);
+    color: var(--color-white);
+    text-decoration: none;
+    font-weight: bold;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: var(--shadow-light);
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+.role-navigation a:hover {
+    background-color: darken(var(--color-bright-blue), 10%);
+    background-color: #3a7bd2; /* Valeur manuelle ajustée */
+    transform: translateY(-2px);
+}
+.role-navigation a:nth-child(5) { /* Chroniqueur */
+    background-color: var(--color-orange-accent);
+}
+.role-navigation a:nth-child(5):hover {
+    background-color: darken(var(--color-orange-accent), 10%);
+    background-color: #e67e22; /* Valeur manuelle ajustée */
+}
+
+/* --- Modale du Chatbot --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 75px;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6); /* Fond semi-transparent */
+    justify-content: center; /* Centrer le contenu */
+    align-items: center; /* Centrer le contenu */
+}
+
+.modal-content {
+    background-color: var(--color-white); /* Corps de la modale en blanc */
+    margin: auto; /* Centrage */
+    margin-top: 20px;
+    padding: 0; /* Pas de padding direct sur le content pour gérer le header */
+    border-radius: 10px;
+    box-shadow: var(--shadow-medium);
+    width: 95%;
+    max-width: 1001px; /* Largeur max pour le chatbot */
+    height: 85vh; /* Hauteur relative pour le chatbot */
+    display: flex;
+    flex-direction: column; /* Layout interne */
+    overflow: hidden; /* Empêche le scroll du contenu de la modale */
+}
+
+.modal-content .close-button {
+    color: var(--color-white); /* Couleur du bouton fermer sur le header bleu */
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute; /* Positionnement absolu par rapport au header de la modale */
+    right: 15px;
+    top: 10px;
+    cursor: pointer;
+    z-index: 1001; /* Au-dessus de tout */
+}
+.modal-content .close-button:hover,
+.modal-content .close-button:focus {
+    color: var(--color-dark-red);
+    text-decoration: none;
+}
+
+/* Entête de la modale (pour le titre "Chatbot Enquête") */
+.modal-header {
+    background-color: var(--color-dark-navy);
+    color: var(--color-white);
+    padding: 10px 20px;
+    text-align: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    position: relative; /* Pour le bouton de fermeture */
+}
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+    color: var(--color-white);
+}
+
+/* L'iframe dans la modale */
+#chatIframe {
+    width: 100%;
+    flex-grow: 1; /* Prend l'espace restant dans la modale */
+    border: none; /* Pas de bordure pour l'iframe */
+    padding-top: 10px; /* Espace sous le header de la modale */
+}
+
+
+/* --- Chatbot Layout (chatbot.html) --- */
+#chat-main-layout {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1; /* Prend l'espace disponible */
+    border: 1px solid var(--color-medium-grey);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-light);
+    margin: 10px; /* Marge interne pour l'iframe */
+}
+
+/* --- Aside Menu (left sidebar) --- */
+aside {
+    flex-direction: column;
+    width: 200px; /* Largeur fixe */
+    background-color: var(--color-light-grey); /* Fond clair pour l'aside */
+    padding: 15px;
+    border-right: 1px solid var(--color-medium-grey);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+aside h4 {
+    color: var(--color-dark-navy);
+    margin-top: 0;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--color-medium-grey);
+    padding-bottom: 5px;
+}
+.role-button {
+    background-color: var(--color-bright-blue);
+    color: var(--color-white);
+    width: 100%;
+    text-align: left;
+    padding: 10px 15px;
+}
+.role-button:hover {
+    background-color: darken(var(--color-bright-blue), 10%);
+    background-color: #3a7bd2;
+    transform: translateY(-1px);
+}
+.role-button.active {
+    background-color: var(--color-dark-navy); /* Rôle actif en bleu marine */
+    border: 2px solid var(--color-green-success); /* Accent vert pour actif */
+    font-weight: bold;
+    color: var(--color-white);
+}
+#new-conversation-button {
+    background-color: var(--color-dark-red); /* Rouge pour "Nouvelle Conversation" */
+    color: var(--color-white);
+    margin-top: 15px;
+}
+#new-conversation-button:hover {
+    background-color: darken(var(--color-dark-red), 10%);
+    background-color: #b30252;
+}
+
+
+/* --- Chat Container --- */
+#chat-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+#messages-display {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background-color: var(--color-white); /* Fond des messages en blanc */
+    display: flex;
+    flex-direction: column;
+}
+.message-wrapper {
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    max-width: 80%;
+    font-size: 0.9em;
+}
+.message-wrapper.user {
+    align-self: flex-end;
+    margin-left: auto;
+}
+.message-wrapper.ai {
+    align-self: flex-start;
+    margin-right: auto;
+}
+.message-timestamp {
+    font-size: 0.75em;
+    color: #888;
+    margin-bottom: 2px;
+    padding: 0 5px;
+}
+.message-timestamp.user { text-align: right; }
+.message-timestamp.ai { text-align: left; }
+
+.message-content {
+    padding: 8px 12px;
+    border-radius: 15px;
+    word-wrap: break-word;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* Ombre légère pour les bulles de chat */
+}
+.message-wrapper.user .message-content {
+    background-color: #dcf8c6; /* Vert clair de WhatsApp */
+}
+.message-wrapper.ai .message-content {
+    background-color: #e0e0e0; /* Gris clair */
+}
+.copy-button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0, 0, 0, 0.15); /* Légèrement plus visible */
+    color: var(--color-white);
+    border: none;
+    border-radius: 3px;
+    padding: 3px 6px;
+    font-size: 0.7em;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease, background-color 0.2s ease;
+}
+.message-content:hover .copy-button {
+    opacity: 1;
+}
+.copy-button:hover {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+#input-area {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid var(--color-medium-grey);
+    background-color: var(--color-light-grey); /* Fond de la zone de saisie */
+}
+#user-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid var(--color-medium-grey);
+    border-radius: 20px; /* Arrondi pour l'input */
+    margin-right: 10px;
+    font-size: 1em;
+}
+#send-button {
+    background-color: var(--color-bright-blue);
+    color: var(--color-white);
+    padding: 10px 20px;
+    border-radius: 20px; /* Arrondi pour le bouton */
+    font-size: 1em;
+}
+#send-button:hover {
+    background-color: darken(var(--color-bright-blue), 10%);
+    background-color: #3a7bd2;
+}
+
+/* --- Styles pour les pages de rôle (investigator.html, etc.) --- */
+.back-button {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 10px 20px;
+    background-color: var(--color-dark-navy);
+    color: var(--color-white);
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+.back-button:hover {
+    background-color: darken(var(--color-dark-navy), 10%);
+    background-color: #050b1a;
+    text-decoration: none;
+}
+
+/* Styles pour la page du chroniqueur (political_commentator.html) */
+#generate-commentary-btn {
+    background-color: var(--color-orange-accent);
+    color: var(--color-white);
+    font-size: 1.1em;
+    padding: 12px 25px;
+}
+#generate-commentary-btn:hover {
+    background-color: darken(var(--color-orange-accent), 10%);
+    background-color: #e67e22;
+}
+#commentary-output {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: var(--color-light-grey);
+    border: 1px dashed var(--color-medium-grey);
+    border-radius: 8px;
+    font-style: italic;
+    color: #555;
+}
+#commentary-output p {
+    margin: 0;
+}
+
+/* Media Queries pour la responsivité */
+@media (max-width: 768px) {
+    body {
+        font-size: 13px;
+    }
+    .container {
+        margin: 10px;
+        padding: 15px;
+    }
+    header h1 {
+        font-size: 1.5em;
+    }
+    .role-navigation a {
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+    #chat-main-layout {
+        flex-direction: column; /* L'aside passe au-dessus du chat sur petits écrans */
+    }
+    aside {
+        width: auto; /* Prend toute la largeur */
+        border-right: none;
+        border-bottom: 1px solid var(--color-medium-grey);
+        flex-direction: row; /* Les boutons de rôle peuvent être côte à côte */
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-bottom: 10px;
+    }
+    aside h4 {
+        display: none; /* Cache le titre de l'aside sur mobile */
+    }
+    .role-button {
+        width: auto; /* Les boutons s'adaptent au contenu */
+        flex-grow: 1; /* Permet aux boutons de prendre plus d'espace */
+        text-align: center;
+    }
+    #new-conversation-button {
+        margin-top: 0;
+        width: 100%; /* Prend toute la largeur en bas des boutons de rôle */
+    }
+    #user-input {
+        padding: 8px;
+    }
+    #send-button {
+        padding: 8px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    #user-input {
+        font-size: 0.9em;
+    }
+    #send-button {
+        font-size: 0.9em;
+    }
+    .message-content {
+        max-width: 90%; /* Plus de place pour les messages sur très petits écrans */
+    }
+}

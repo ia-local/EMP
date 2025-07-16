@@ -1,0 +1,591 @@
+# api-docs/swagger.yaml
+openapi: 3.0.0
+info:
+  title: API de l'Enquête Parlementaire
+  description: API pour la gestion du tableau de bord, des logs et de l'interaction avec le LLM pour l'enquête parlementaire.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Serveur de développement local
+tags:
+  - name: Chatbot
+    description: Endpoints pour l'interaction avec le chatbot et les rôles.
+  - name: Logs
+    description: Endpoints pour la gestion des logs d'application et des erreurs frontend.
+  - name: Tableau de Bord
+    description: Endpoints pour les données du tableau de bord (aperçu, flux financiers, algorithmes, explorateur).
+  - name: Défaillances
+    description: Endpoints pour la gestion et l'analyse des défaillances de la Ve République et de la Fonction Publique.
+
+paths:
+  /api/chat:
+    post:
+      summary: Envoyer un message au chatbot
+      tags:
+        - Chatbot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: Le message de l'utilisateur.
+                role:
+                  type: string
+                  description: Le rôle choisi pour le chatbot.
+                  enum: [journaliste, avocat, juge, chroniqueur, enquêteur, analyste_defaillances]
+                history: # Renamed from conversationHistory to match backend
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      role:
+                        type: string
+                      message:
+                        type: string
+                  description: Historique de la conversation pour le contexte.
+                sectorKey: # New property for analyste_defaillances role
+                  type: string
+                  description: Clé du secteur d'activité si le rôle est 'analyste_defaillances' (e.g., 'justice', 'education').
+                  nullable: true
+              example:
+                message: "Quel est le dernier développement dans l'affaire?"
+                role: "enquêteur"
+                history: []
+                sectorKey: null # Example for other roles
+            examples:
+              analyste_defaillances_example:
+                summary: Exemple pour le rôle 'analyste_defaillances'
+                value:
+                  message: "Analysez les défaillances du secteur de la justice."
+                  role: "analyste_defaillances"
+                  history: []
+                  sectorKey: "justice"
+      responses:
+        '200':
+          description: Réponse du LLM.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+        '400':
+          description: Requête invalide (message ou rôle manquant).
+        '500':
+          description: Erreur interne du serveur.
+
+  /api/commentator:
+    post:
+      summary: Obtenir un commentaire d'un chroniqueur (LLM)
+      tags:
+        - Chatbot
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                context:
+                  type: string
+                  description: Le contexte ou le message à commenter.
+              example:
+                context: "L'affaire Oliver Merleix prend une nouvelle tournure."
+      responses:
+        '200':
+          description: Commentaire du chroniqueur.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comment:
+                    type: string
+        '500':
+          description: Erreur interne du serveur.
+
+  /api/logs:
+    get:
+      summary: Récupérer tous les logs du chatbot
+      tags:
+        - Logs
+      responses:
+        '200':
+          description: Liste des logs du chatbot.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    timestamp:
+                      type: string
+                      format: date-time
+                    role:
+                      type: string
+                    user_message: # Updated from 'message'
+                      type: string
+                    llm_response: # Updated from 'response'
+                      type: string
+                    model_used: # New property
+                      type: string
+        '500':
+          description: Erreur interne du serveur.
+
+  /api/ia-analysis-logs:
+    get:
+      summary: Récupérer tous les logs des analyses IA générées
+      tags:
+        - Logs
+        - Défaillances # Also add to Défaillances tag as it's relevant
+      responses:
+        '200':
+          description: Liste des logs d'analyse IA.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    timestamp:
+                      type: string
+                      format: date-time
+                    sector:
+                      type: string
+                      description: Clé du secteur analysé (e.g., 'justice', 'education').
+                    prompt:
+                      type: string
+                      description: Le prompt complet envoyé à l'IA pour cette analyse.
+                    generated_analysis:
+                      type: string
+                      description: Le texte de l'analyse générée par l'IA.
+                    model:
+                      type: string
+                      description: Le modèle LLM utilisé pour la génération.
+        '500':
+          description: Erreur interne du serveur.
+
+  /api/log/frontend-error:
+    post:
+      summary: Enregistrer une erreur provenant du frontend
+      tags:
+        - Logs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                error:
+                  type: string
+                component:
+                  type: string
+              example:
+                message: "Failed to load overview data"
+                error: "Network error"
+                component: "Overview"
+      responses:
+        '200':
+          description: Erreur loggée avec succès.
+        '500':
+          description: Erreur interne du serveur.
+
+  /api/log/performance:
+    post:
+      summary: Enregistrer une métrique de performance du frontend
+      tags:
+        - Logs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                metricName:
+                  type: string
+                value:
+                  type: number
+                unit:
+                  type: string
+              example:
+                metricName: "loadTime"
+                value: 1234
+                unit: "ms"
+      responses:
+        '200':
+          description: Métrique loggée avec succès.
+        '500':
+          description: Erreur interne du serveur.
+
+  /api/log/user-action:
+    post:
+      summary: Enregistrer une action utilisateur depuis le frontend
+      tags:
+        - Logs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                details:
+                  type: object
+              example:
+                action: "buttonClick"
+                details:
+                  buttonId: "nav-overview"
+      responses:
+        '200':
+          description: Action loggée avec succès.
+        '500':
+          description: Erreur interne du serveur.
+
+  /api/dashboard/summary:
+    get:
+      summary: Récupérer les données de résumé pour l'aperçu du tableau de bord
+      tags:
+        - Tableau de Bord
+      responses:
+        '200':
+          description: Données de résumé (total transactions, alertes, entités à risque).
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalTransactions:
+                    type: number
+                  activeAlerts:
+                    type: number
+                  riskyEntities:
+                    type: number
+        '500':
+          description: Erreur interne du serveur.
+
+  /api/financial-flows:
+    get:
+      summary: Récupérer tous les flux financiers
+      tags:
+        - Tableau de Bord
+      responses:
+        '200':
+          description: Liste des flux financiers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    sender_name:
+                      type: string
+                    sender_country:
+                      type: string
+                    sender_geo:
+                      type: object
+                      properties:
+                        lat:
+                          type: number
+                        lon:
+                          type: number
+                    receiver_name:
+                      type: string
+                    receiver_country:
+                      type: string
+                    receiver_geo:
+                      type: object
+                      properties:
+                        lat:
+                          type: number
+                        lon:
+                          type: number
+                    amount_original:
+                      type: number
+                    currency_original:
+                      type: string
+                    amount_eur:
+                      type: number
+                    date:
+                      type: string
+                      format: date
+                    is_suspicious:
+                      type: boolean
+                    is_crypto:
+                      type: boolean
+                    description:
+                      type: string
+    post:
+      summary: Ajouter un nouveau flux financier
+      tags:
+        - Tableau de Bord
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sender_name:
+                  type: string
+                sender_country:
+                  type: string
+                sender_geo:
+                  type: object
+                  properties:
+                    lat:
+                      type: number
+                    lon:
+                      type: number
+                receiver_name:
+                  type: string
+                receiver_country:
+                  type: string
+                receiver_geo:
+                  type: object
+                  properties:
+                    lat:
+                      type: number
+                    lon:
+                      type: number
+                amount_original:
+                  type: number
+                currency_original:
+                  type: string
+                amount_eur:
+                  type: number
+                date:
+                  type: string
+                  format: date
+                is_suspicious:
+                  type: boolean
+                is_crypto:
+                  type: boolean
+                description:
+                  type: string
+              example:
+                sender_name: "Entreprise A"
+                sender_country: "France"
+                sender_geo: { lat: 48.8566, lon: 2.3522 }
+                receiver_name: "Société B"
+                receiver_country: "Suisse"
+                receiver_geo: { lat: 46.2044, lon: 6.1432 }
+                amount_original: 100000
+                currency_original: "USD"
+                amount_eur: 92000
+                date: "2023-01-15"
+                is_suspicious: true
+                is_crypto: false
+                description: "Transfert suspect"
+      responses:
+        '201':
+          description: Flux financier ajouté.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  flow:
+                    type: object
+        '500':
+          description: Erreur interne du serveur.
+
+  /api/algorithm-detections:
+    get:
+      summary: Récupérer les détections des algorithmes
+      tags:
+        - Tableau de Bord
+      responses:
+        '200':
+          description: Liste des détections.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    type_detection:
+                      type: string
+                    score_de_risque:
+                      type: number
+                    details:
+                      type: string
+                    amount_eur:
+                      type: number
+        '500':
+          description: Erreur interne du serveur.
+
+  /api/data/search:
+    get:
+      summary: Rechercher des données (transactions, entités)
+      tags:
+        - Tableau de Bord
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          description: Terme de recherche.
+      responses:
+        '200':
+          description: Résultats de la recherche.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    type:
+                      type: string
+                    description:
+                      type: string
+                    amount:
+                      type: number
+                    currency:
+                      type: string
+        '500':
+          description: Erreur interne du serveur.
+
+  /api/affaires:
+    get:
+      summary: Récupérer la chronologie des affaires
+      tags:
+        - Tableau de Bord
+      responses:
+        '200':
+          description: Objet contenant la chronologie des affaires par année.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  chronology:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        year:
+                          type: number
+                        events:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              timestamp:
+                                type: string
+                                format: date-time
+                              title:
+                                type: string
+                              description:
+                                type: string
+        '500':
+          description: Erreur interne du serveur.
+
+  /api/petitions:
+    get:
+      summary: Récupérer la liste des pétitions
+      tags:
+        - Tableau de Bord
+      responses:
+        '200':
+          description: Liste des pétitions.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    signatures:
+                      type: number
+                    status:
+                      type: string
+        '500':
+          description: Erreur interne du serveur.
+
+  /api/defaillances:
+    get:
+      summary: Récupérer toutes les données de défaillances par secteur
+      tags:
+        - Défaillances
+      responses:
+        '200':
+          description: Objet contenant les données de défaillances organisées par secteur.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+                  properties:
+                    titre:
+                      type: string
+                    details:
+                      type: array
+                      items:
+                        type: string
+        '500':
+          description: Erreur interne du serveur.
+
+  /api/defaillances/{secteur}:
+    get:
+      summary: Récupérer les détails des défaillances pour un secteur spécifique
+      tags:
+        - Défaillances
+      parameters:
+        - in: path
+          name: secteur
+          required: true
+          schema:
+            type: string
+            enum: [justice, education, sante, agriculture, transports, energie, environnement, defense]
+          description: La clé du secteur (ex. 'justice').
+      responses:
+        '200':
+          description: Détails des défaillances pour le secteur spécifié.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  titre:
+                    type: string
+                  details:
+                    type: array
+                    items:
+                      type: string
+        '404':
+          description: Secteur non trouvé.
+        '500':
+          description: Erreur interne du serveur.

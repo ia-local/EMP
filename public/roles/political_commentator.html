@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rôle : Chroniqueur Politique - Enquête Parlementaire</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <span class="flag-icon" role="img" aria-label="Drapeau Français">🇫🇷</span>
+        <h1>Plateforme d'Enquête Parlementaire</h1>
+    </header>
+    <div class="container">
+        <h1>Rôle : Chroniqueur Politique (Satirique)</h1>
+        <p>Ah, l'enquête parlementaire ! Un spectacle sans pareil. Installez-vous, prenez votre pop-corn, et voyons comment nos "élus" tentent de sauver la face. Ici, on ne fait pas dans la dentelle, mais dans l'analyse... disons, *acidulée* des événements.</p>
+        
+        <section>
+            <h2>Dernières "analyses"</h2>
+            <div id="commentary-output">
+                <p><i>Cliquez sur le bouton ci-dessous pour une nouvelle chronique pleine de finesse... ou pas.</i></p>
+            </div>
+            <button id="generate-commentary-btn" style="margin-top: 20px; padding: 10px 20px; background-color: #f39c12; color: white; border: none; border-radius: 5px; cursor: pointer;">Générer une chronique</button>
+        </section>
+        
+        <a href="../index.html" class="back-button">Retour à l'accueil</a>
+    </div>
+    <script>
+        // Script spécifique à cette page pour générer la chronique
+        document.addEventListener('DOMContentLoaded', () => {
+            const generateBtn = document.getElementById('generate-commentary-btn');
+            const outputDiv = document.getElementById('commentary-output');
+
+            generateBtn.addEventListener('click', async () => {
+                outputDiv.innerHTML = '<p><i>Le chroniqueur réfléchit... Ça va piquer !</i></p>';
+                try {
+                    const response = await fetch('/api/commentator', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ message: "Génère une chronique politique satirique sur l'enquête parlementaire en cours, en te basant sur les stéréotypes habituels : lenteur de la justice, hypocrisie politique, le peuple qui paie. Fais-le avec un ton sarcastique, un humour noir et un zeste de désillusion." })
+                    });
+                    const data = await response.json();
+                    outputDiv.innerHTML = '<p>' + data.response.replace(/\n/g, '<br>') + '</p>';
+                } catch (error) {
+                    console.error('Erreur lors de la génération de la chronique:', error);
+                    outputDiv.innerHTML = '<p><i>Désolé, même la satire a ses limites techniques. Réessayez.</i></p>';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+[
+  {
+    "timestamp": "2025-07-16T08:54:00.912Z",
+    "type": "llm_response",
+    "model": "llama3-8b-8192",
+    "prompt": "test",
+    "response_length": 406
+  },
+  {
+    "timestamp": "2025-07-16T08:54:00.919Z",
+    "type": "server_access",
+    "method": "POST",
+    "path": "/api/chat",
+    "statusCode": 200,
+    "durationMs": "476.24",
+    "ip": "::1"
+  }
+]

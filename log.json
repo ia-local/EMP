@@ -1,0 +1,9 @@
+[
+  {
+    "role": "investigator",
+    "user_message": "test",
+    "llm_response": "Je suis l'enquêteur responsable de l'enquête parlementaire. Je suis actuellement en train d'examiner un dossier sensível et de recueillir des informations pour établir les faits. Pour l'instant, je n'ai pas encore trouvé de preuves définitives, mais j'ai quelques éléments qui m'ont semblé intéressants.\n\nPouvez-vous me poser une question ou me donner des informations pour aider à avancer dans l'enquête ?",
+    "model_used": "llama3-8b-8192",
+    "timestamp": "2025-07-16T08:54:00.913Z"
+  }
+]

@@ -1,0 +1,432 @@
+/* public/css/styles.css */
+
+/* Styles généraux pour le corps et le conteneur */
+html {
+    min-width: 100vh;
+    min-height: 100vh;
+}
+body {
+    min-width: 100vh;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7f6; /* Un fond léger pour toute la page */
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 90%;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+
+/* Styles du Header */
+.header {
+    background-color: #2c3e50; /* Couleur foncée pour l'en-tête */
+    color: white;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 1.8em;
+    font-weight: 700;
+}
+
+/* Styles pour le CMS et le bouton Chatbot dans le header */
+.cms {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Espace entre le titre et le bouton */
+}
+
+.flag-icon button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.flag-icon button:hover {
+    background-color: #2980b9;
+}
+
+/* Boutons génériques et liens (pour les outils IA, etc.) */
+.button-link {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.button-link:hover {
+    background-color: #0056b3;
+}
+
+/* Marges utilitaires */
+.ml-4 {
+    margin-left: 1rem; /* 16px */
+}
+
+/* Navigation principale (barre horizontale en haut) */
+.main-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap; /* Permet aux éléments de passer à la ligne si l'écran est petit */
+    justify-content: center;
+    background-color: #e9ecef;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.main-nav li {
+    margin: 5px 10px;
+}
+
+.main-nav .nav-link {
+    display: flex; /* Pour aligner icône et texte */
+    align-items: center;
+    padding: 8px 15px;
+    text-decoration: none;
+    color: #007bff;
+    font-weight: 600;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.main-nav .nav-link i {
+    margin-right: 8px;
+}
+
+.main-nav .nav-link:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.main-nav .nav-link.active {
+    background-color: #0056b3; /* Couleur plus foncée pour l'actif */
+    color: white;
+}
+
+/* Styles pour la disposition principale en deux colonnes */
+.main-layout-columns {
+    display: flex; /* Active Flexbox */
+    gap: 30px; /* Espace entre les colonnes */
+    margin-top: 0; /* Pas de marge supérieure car la nav principale gère déjà */
+}
+
+/* Colonne latérale (Aside) */
+.aside-column {
+    flex: 0 0 280px; /* Largeur fixe pour la colonne latérale, ne grandit pas, ne rétrécit pas */
+    background-color: #fff; /* Fond blanc pour la barre latérale */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    align-self: flex-start; /* Alignement en haut pour la colonne latérale */
+    position: sticky; /* Rendre la barre latérale "collante" au défilement */
+    top: 20px; /* Distance du haut de la fenêtre */
+    height: fit-content; /* S'adapte au contenu */
+}
+
+.aside-column .subsection-title {
+    color: #2c3e50;
+    font-size: 1.3em;
+    margin-top: 0;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    margin-bottom: 8px;
+}
+
+.sidebar-nav .sidebar-link {
+    display: block;
+    padding: 10px 15px;
+    background-color: #f0f0f0; /* Couleur de fond des liens */
+    color: #333;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar-nav .sidebar-link i {
+    margin-right: 10px;
+    color: #666; /* Couleur des icônes */
+}
+
+.sidebar-nav .sidebar-link:hover {
+    background-color: #e0e0e0;
+    color: #007bff;
+}
+
+.sidebar-nav .sidebar-link.active {
+    background-color: #007bff; /* Couleur d'arrière-plan du lien actif */
+    color: white;
+    font-weight: bold;
+}
+
+.sidebar-nav .sidebar-link.active i {
+    color: white; /* Icônes blanches pour le lien actif */
+}
+
+.action-buttons {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* Colonne de contenu principal (Main) */
+.main-content-column {
+    flex: 1; /* Prend l'espace restant disponible */
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.main-content-column h1,
+.main-content-column h2,
+.main-content-column h3 {
+    color: #2c3e50;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.main-content-column p {
+    margin-bottom: 15px;
+}
+
+.main-content-column ul {
+    list-style: disc;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+.main-content-column ul li {
+    margin-bottom: 8px;
+}
+
+/* Styles pour les sections de contenu */
+.content-section {
+    display: none; /* Toutes les sections sont cachées par défaut */
+    padding: 20px 0; /* Ajout d'un padding vertical pour le contenu */
+}
+
+.content-section.active {
+    display: block; /* Seule la section active est affichée */
+}
+
+/* Styles spécifiques aux liens de rôle */
+.role-navigation {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.role-navigation .role-link {
+    background-color: #ecf0f1;
+    color: #2c3e50;
+    padding: 15px 20px;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.role-navigation .role-link i {
+    font-size: 1.8em;
+    color: #3498db;
+}
+
+.role-navigation .role-link:hover {
+    background-color: #dce0e1;
+    transform: translateY(-3px);
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+/* Styles pour la Modale (Chatbot) */
+.modal {
+    display: none; /* Caché par défaut */
+    position: fixed; /* Reste en place même au défilement */
+    z-index: 1000; /* Se place au-dessus de tout le reste */
+    left: 0;
+    top: 0;
+    width: 100%; /* Pleine largeur */
+    height: 100%; /* Pleine hauteur */
+    overflow: auto; /* Active le défilement si nécessaire */
+    background-color: rgba(0,0,0,0.6); /* Fond semi-transparent noir */
+    display: flex; /* Utilise flexbox pour centrer le contenu */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Centrage automatique */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%; /* Largeur de la modale */
+    max-width: 700px; /* Largeur maximale */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative; /* Pour positionner le bouton de fermeture */
+    min-height: 400px; /* Hauteur minimale */
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.5em;
+}
+
+.close-button {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #333;
+    text-decoration: none;
+}
+
+/* Styles pour l'iframe du chatbot */
+#chatIframe {
+    flex-grow: 1; /* Permet à l'iframe de prendre l'espace disponible */
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .main-layout-columns {
+        flex-direction: column; /* Les colonnes s'empilent sur petits écrans */
+    }
+
+    .aside-column {
+        position: static; /* Enlève le sticky sur mobile */
+        width: auto; /* Largeur automatique */
+        flex: auto;
+        order: -1; /* Place la barre latérale au-dessus du contenu principal sur mobile */
+    }
+
+    .main-nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .main-nav li {
+        width: 100%;
+        text-align: center;
+        margin: 5px 0;
+    }
+
+    .role-navigation {
+        grid-template-columns: 1fr; /* Une colonne par défaut sur les très petits écrans */
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 15px;
+        padding: 15px 20px;
+        text-align: center;
+    }
+
+    .cms {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .ml-4 {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .modal-content {
+        width: 95%; /* Plus large sur les petits écrans */
+        padding: 15px;
+    }
+}

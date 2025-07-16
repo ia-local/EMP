@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enquête Parlementaire - Accueil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/updates.css">
+</head>
+<body>
+    <header class="header">
+        <div class="cms">
+            <h1>Plateforme d'Enquête Parlementaire</h1>
+            <span class="flag-icon" role="img" aria-label="Drapeau Français">
+                <button id="openChatModalBtn">🇫🇷 Chatbot</button>
+                <a href="index.html" class="nav-link active" data-page="home"><i class="fas fa-home"></i> Accueil</a>
+            </span>
+        </div>
+    </header>
+
+    <div class="container">
+
+
+        <div class="main-layout-columns">
+            <aside class="aside-column">
+                <h2 class="subsection-title">Dossier Judiciaire</h2>
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li>
+                            <a href="#" class="sidebar-link active" data-section-id="welcome-section"><i class="fas fa-info-circle"></i> Accueil de l'Enquête</a>
+                        </li>
+                        <li>
+                            <a href="#" class="sidebar-link" data-section-id="case-summary-section"><i class="fas fa-scroll"></i> Synthèse de l'Affaire</a>
+                        </li>
+                        <li>
+                            <a  class="sidebar-link" href="dashboard.html">[_] Dashboard</a>
+                        </li>
+                                                <li>
+                            <a href="#" class="sidebar-link" data-section-id="key-points-section"><i class="fas fa-list-ul"></i> Points Clés</a>
+                        </li>
+                        <li>
+                            <a href="#" class="sidebar-link" data-section-id="roles-section"><i class="fas fa-users-cog"></i> Accès par Rôle</a>
+                        </li>
+                        <li>
+                            <a href="#" class="sidebar-link" data-section-id="deficiencies-overview"><i class="fas fa-exclamation-circle"></i> Aperçu des Défaillances</a>
+                        </li>
+                        </ul>
+                </nav>
+                <div class="action-buttons">
+                    <button id="openChatbotBtnAside" class="btn-secondary">Ouvrir Chatbot</button>
+                    </div>
+            </aside>
+
+            <main class="main-content-column">
+                <section id="welcome-section" class="content-section active">
+                    <h1>Bienvenue sur l'Interface de Suivi de l'Enquête Parlementaire</h1>
+                    <p>Utilisez cette application pour consulter les détails de l'enquête et interagir avec les simulateurs de rôles (Enquêteur, Journaliste, Avocat, Juge) via le chatbot.</p>
+                </section>
+
+                <hr style="margin: 40px 0; border-color: var(--color-medium-grey);">
+
+                <section id="roles-section" class="content-section">
+                    <h2>Accéder aux Espaces Dédiés par Rôle</h2>
+                    <div class="role-navigation">
+                        <a href="roles/investigator.html" class="role-link"><i class="fas fa-magnifying-glass"></i> Espace Enquêteur</a>
+                        <a href="roles/journalist.html" class="role-link"><i class="fas fa-newspaper"></i> Espace Journaliste</a>
+                        <a href="roles/lawyer.html" class="role-link"><i class="fas fa-gavel"></i> Espace Avocat</a>
+                        <a href="roles/judge.html" class="role-link"><i class="fas fa-balance-scale"></i> Espace Juge</a>
+                        <a href="roles/political_commentator.html" class="role-link"><i class="fas fa-microphone-alt"></i> Espace Chroniqueur Politique</a>
+                    </div>
+                </section>
+
+                <section id="case-summary-section" class="content-section">
+                    <h2>Synthèse de l'Affaire (non-exhaustive)</h2>
+                    <p>Cette plateforme simule une enquête complexe autour d'allégations de fraude électorale, de détournements de fonds publics via des entités offshore, et d'atteintes potentielles à l'intégrité physique de citoyens. Les informations sont présentées sous l'angle de différents métiers de la justice et de l'information.</p>
+                </section>
+
+                <section id="key-points-section" class="content-section">
+                    <h3>Points Clés :</h3>
+                    <ul>
+                        <li>**Haut Fonctionnaire Impliqué :** Identification d'un lien présumé avec des mouvements de fonds suspects.</li>
+                        <li>**Sociétés Offshore :** Examen des flux financiers transitant par des structures basées en Angleterre et ailleurs.</li>
+                        <li>**Allégations de Santé Publique :** Investigation sur des rumeurs d'expérimentations non consenties impliquant des substances biochimiques.</li>
+                        <li>**Cadre Légal :** Application stricte des articles pertinents du Code de Procédure Pénale (notamment Art. 41), Code Pénal, et références aux conventions internationales.</li>
+                    </ul>
+                </section>
+
+                <section id="deficiencies-overview" class="content-section">
+                    <h2>Aperçu des Défaillances</h2>
+                    <p>Cette section présentera un résumé des défaillances identifiées, classées par secteur d'activité, ou un lien vers la page détaillée des défaillances.</p>
+                    <p><a href="defaillances.html" class="btn-primary">Voir toutes les Défaillances</a></p>
+                </section>
+
+            </main>
+        </div>
+    </div>
+
+    <div id="chatModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Chatbot d'Enquête</h2>
+                <span class="close-button" id="closeChatModalBtn">&times;</span>
+            </div>
+            <iframe id="chatIframe" src="chatbot.html" frameborder="0" style="width:100%; height: calc(100% - 40px);"></iframe>
+        </div>
+    </div>
+
+    <script src="js/modal.js"></script>
+    <script type="module" src="js/scripts.js"></script>
+</body>
+</html>
