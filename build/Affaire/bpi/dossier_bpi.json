@@ -1,0 +1,61 @@
+{
+    "titre": "Enquête sur la création de la BPI et l'usage de l'article 49.3",
+    "description": "Analyse de la création de la Banque Publique d'Investissement (BPI) sous le mandat de Nicolas Sarkozy en 2009, avec l'utilisation de l'article 49.3 pour imposer des réformes financières et fiscales.",
+    "context": {
+      "periode": "2009",
+      "president": "Nicolas Sarkozy",
+      "premier_ministre": "Manuel Valls",
+      "ministre_economie_finance": "Emmanuel Macron",
+      "lois": [
+        {
+          "article": "49.3",
+          "description": "Permet d'adopter un texte sans vote à l'Assemblée nationale, utilisé pour imposer les réformes liées à la création de la BPI."
+        }
+      ]
+    },
+    "objectifs": [
+      "Étudier le processus de création de la BPI sous l'article 49.3.",
+      "Analyser les impacts fiscaux et financiers des réformes associées à la BPI.",
+      "Identifier les implications légales et les abus potentiels de l'article 49.3.",
+      "Évaluer le rôle des acteurs politiques et économiques dans l'imposition de ces réformes."
+    ],
+    "sections": [
+      {
+        "titre": "Contexte législatif et constitutionnel",
+        "details": [
+          {
+            "sujet": "Utilisation de l'article 49.3 pour la création de la BPI",
+            "description": "Contexte de l'article 49.3 et son utilisation pour passer des réformes majeures sans vote parlementaire.",
+            "hypothese": "L'usage répété de l'article 49.3 pour la création de la BPI pourrait avoir contourné les processus démocratiques.",
+            "articles_de_loi": ["49.3 de la Constitution française"],
+            "preuves": []
+          }
+        ]
+      },
+      {
+        "titre": "Implications fiscales et économiques",
+        "details": [
+          {
+            "sujet": "Réformes fiscales associées à la BPI",
+            "description": "Analyse des réformes fiscales imposées en lien avec la création de la BPI.",
+            "hypothese": "Les réformes fiscales auraient principalement bénéficié à certaines élites économiques.",
+            "articles_de_loi": ["Article 49.3", "Loi de finances"],
+            "preuves": []
+          }
+        ]
+      },
+      {
+        "titre": "Impact sur l'économie et le financement",
+        "details": [
+          {
+            "sujet": "Financements et opérations de la BPI",
+            "description": "Étude des opérations de financement de la BPI et de ses effets sur les PME et l'économie française.",
+            "hypothese": "Les financements de la BPI ont été détournés de leur mission initiale pour des intérêts privés.",
+            "articles_de_loi": ["Articles relatifs à la gestion de fonds publics"],
+            "preuves": []
+          }
+        ]
+      }
+    ]
+  }
+  
