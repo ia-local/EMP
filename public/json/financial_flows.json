@@ -1,0 +1,23 @@
+[
+  {
+    "sender_name": "Entreprise A (Paris)",
+    "sender_country": "France",
+    "sender_geo": {
+      "lat": 48.8566,
+      "lon": 2.3522
+    },
+    "receiver_name": "Société B (Londres)",
+    "receiver_country": "Royaume-Uni",
+    "receiver_geo": {
+      "lat": 51.5074,
+      "lon": -0.1278
+    },
+    "amount_original": 150000,
+    "currency_original": "EUR",
+    "amount_eur": 150000,
+    "is_crypto": false,
+    "is_suspicious": true,
+    "description": "Transfert commercial suspect",
+    "id": "flow_1751999123912_5p6q8t78x"
+  }
+]

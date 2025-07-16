@@ -18,13 +18,13 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Chemin vers les fichiers de log
-const APP_LOG_FILE_PATH = path.join(__dirname, 'app_logs.json');
-const CHATBOT_LOG_FILE_PATH = path.join(__dirname, 'log.json');
-const FINANCIAL_FLOWS_FILE_PATH = path.join(__dirname, 'financial_flows.json');
-const AFFAIRES_FILE_PATH = path.join(__dirname, 'affaires.json');
-const PETITIONS_FILE_PATH = path.join(__dirname, 'petitions.json');
-const DEFAILLANCES_FILE_PATH = path.join(__dirname, 'defaillances_republique.json');
-const IA_ANALYSIS_LOG_FILE_PATH = path.join(__dirname, 'ia_analysis_logs.json');
+const APP_LOG_FILE_PATH = path.join(__dirname,'public/json', 'app_logs.json');
+const CHATBOT_LOG_FILE_PATH = path.join(__dirname,'public/json', 'log.json');
+const FINANCIAL_FLOWS_FILE_PATH = path.join(__dirname,'public/json', 'financial_flows.json');
+const AFFAIRES_FILE_PATH = path.join(__dirname,'public/json', 'affaires.json');
+const PETITIONS_FILE_PATH = path.join(__dirname,'public/json', 'petitions.json');
+const DEFAILLANCES_FILE_PATH = path.join(__dirname,'public/json', 'defaillances_republique.json');
+const IA_ANALYSIS_LOG_FILE_PATH = path.join(__dirname,'public/json', 'ia_analysis_logs.json');
 
 // --- Variables pour la gestion de la file d'attente des logs d'application ---
 let appLogQueue = [];
