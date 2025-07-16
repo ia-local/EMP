@@ -5761,5 +5761,21 @@
     "statusCode": 304,
     "durationMs": "0.52",
     "ip": "::1"
+  },
+  {
+    "timestamp": "2025-07-16T09:01:04.921Z",
+    "type": "llm_response",
+    "model": "llama3-8b-8192",
+    "prompt": "test",
+    "response_length": 360
+  },
+  {
+    "timestamp": "2025-07-16T09:01:04.936Z",
+    "type": "server_access",
+    "method": "POST",
+    "path": "/api/chat",
+    "statusCode": 200,
+    "durationMs": "433.37",
+    "ip": "::1"
   }
 ]

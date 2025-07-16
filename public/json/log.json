@@ -522,5 +522,12 @@
     "llm_response": "Bonjour. Je suis l'avocat qui assiste à cette enquête parlementaire. Je suis prêt à répondre à vos questions et à apporter ma compétence juridique à la discussion. Qu'est-ce que vous souhaitez savoir ?",
     "model_used": "llama3-8b-8192",
     "timestamp": "2025-07-16T08:24:15.594Z"
+  },
+  {
+    "role": "journalist",
+    "user_message": "test",
+    "llm_response": "Je suis ravi de jouer le rôle d'un journaliste enquêteur pour vous ! Je suis actuellement en cours d'enquête dans une affaire parlementaire et j'ai besoin de votre aide pour déterminer les faits.\n\nPour commencer, pouvez-vous me dire ce que vous savez concernant l'affaire parlementaire que je suis en train d'enquêter ? Quel est votre rôle dans cette affaire ?",
+    "model_used": "llama3-8b-8192",
+    "timestamp": "2025-07-16T09:01:04.921Z"
   }
 ]
